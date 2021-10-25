@@ -30,7 +30,7 @@ import {
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({
-      type: USER_LOGIN_REQUEST,
+      type: USER_DETAILS_REQUEST,
     });
 
     const config = {
@@ -39,15 +39,19 @@ export const login = (email, password) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.post("api/users/login", { email, password }, config);
+    const { data } = await axios.post(
+      "http://localhost:3004/api/users/login",
+      { email, password },
+      config
+    );
 
+    dispatch({ type: USER_DETAILS_SUCCESS, payload: data });
     dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-
     localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     console.log(error);
     dispatch({
-      type: USER_LOGIN_FAIL,
+      type: USER_DETAILS_FAIL,
       payload:
         error.response && error.response.data.message ? error.response.data.message : error.message,
     });
@@ -65,7 +69,7 @@ export const logout = () => (dispatch) => {
 export const register = (name, email, password) => async (dispatch) => {
   try {
     dispatch({
-      type: USER_REGISTER_REQUEST,
+      type: USER_DETAILS_REQUEST,
     });
 
     const config = {
@@ -74,9 +78,13 @@ export const register = (name, email, password) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.post("api/users", { name, email, password }, config);
+    const { data } = await axios.post(
+      "http://localhost:3004/api/users",
+      { name, email, password },
+      config
+    );
 
-    dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
+    dispatch({ type: USER_DETAILS_SUCCESS, payload: data });
 
     dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
 
@@ -84,7 +92,7 @@ export const register = (name, email, password) => async (dispatch) => {
   } catch (error) {
     console.log(error);
     dispatch({
-      type: USER_REGISTER_FAIL,
+      type: USER_DETAILS_FAIL,
       payload:
         error.response && error.response.data.message ? error.response.data.message : error.message,
     });
