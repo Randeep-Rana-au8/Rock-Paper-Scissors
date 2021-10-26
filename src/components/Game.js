@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 const Game = ({ score, myChoice, setScore }) => {
   const [house, setHouse] = useState("");
   const [playerWin, setPlayerWin] = useState("");
+  const history = useHistory();
+  const userDetails = useSelector((state) => state.userDetails);
+  const { loading, error, userInfo } = userDetails;
 
   const [counter, setCounter] = useState(3);
 
@@ -14,6 +19,12 @@ const Game = ({ score, myChoice, setScore }) => {
   useEffect(() => {
     newHousePick();
   }, []);
+
+  useEffect(() => {
+    if (!userInfo?.name) {
+      history.push("/signin");
+    }
+  }, [history, userInfo]);
 
   const Result = () => {
     if (myChoice === "rock" && house === "scissors") {
